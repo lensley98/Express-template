@@ -99,3 +99,9 @@ out
 
 # OS-specific files
 .DS_Store
+
+# JetBrains IDEs (WebStorm, IntelliJ, etc.)
+.idea/
+
+# bin
+bin/
