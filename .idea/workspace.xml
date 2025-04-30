@@ -54,7 +54,6 @@
     "Node.js.app.js.executor": "Run",
     "Node.js.bin\\www.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "javascript.nodejs.core.library.configured.version": "20.18.0",
     "javascript.nodejs.core.library.typings.version": "20.17.31",
@@ -103,7 +102,6 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Node.js.bin\www" />
       <item itemvalue="npm.dev:sync" />
       <item itemvalue="npm.dev" />
     </list>
@@ -132,7 +130,7 @@
       <workItem from="1745694103748" duration="16617000" />
       <workItem from="1745744751909" duration="3470000" />
       <workItem from="1745767855328" duration="10089000" />
-      <workItem from="1746006665098" duration="3475000" />
+      <workItem from="1746006665098" duration="3901000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
