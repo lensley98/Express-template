@@ -1,0 +1,32 @@
+{
+  "name": "expressswagger",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+    "scripts": {
+      "start": "node --env-file=.env app.js",
+      "dev": "nodemon --env-file=.env app.js",
+      "browser-sync": "node --env-file=.env browser-sync-script.js",
+      "dev:sync": "concurrently \"nodemon --env-file=.env app.js\" \"wait-on tcp:4003 && npm run browser-sync\""
+    },
+  "dependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "babel-loader": "^10.0.0",
+    "chokidar": "^4.0.3",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "~1.9.1",
+    "swagger-autogen": "^2.23.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "uuid": "^11.1.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.4",
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0"
+  }
+}
