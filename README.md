@@ -10,8 +10,8 @@ This is an Express-based API template. It includes:
 
 ### 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/api-template.git
-cd api-template
+git clone https://github.com/lensley98/Express-template.git
+cd Express-template
 ```
 ### 2. Install dependencies:
 ```  bash
