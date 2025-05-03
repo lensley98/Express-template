@@ -1,13 +1,22 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
+import http from 'http';
+import helmet from 'helmet';
+import setupHelmet from './config/helmet.js';
 import { setupDynamicRoutes } from './core/routesLoader.js';
-import { protectVersionRoutes } from './core/versionMiddleware.js';
+import { protectVersionRoutes } from './middlewares/version.middleware.js';
+import {errorHandlerMiddleware} from "./middlewares/errorHandler.middleware.js";
 import swaggerUi from 'swagger-ui-express';
 import swaggerSpec from './config/swagger.js';
-import http from 'http';
 
 const app = express();
+if (process.env.NODE_ENV === 'production') {
+    setupHelmet(app);
+} else {
+    app.use(helmet({ contentSecurityPolicy: false }));
+}
+
 
 /**
  * Middleware to parse JSON bodies.
@@ -20,6 +29,8 @@ app.use(express.json());
  * @function
  */
 app.use(express.urlencoded({ extended: false }));
+
+
 
 /**
  * Middleware to log HTTP requests.
@@ -105,18 +116,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
  * @param {express.Response} res - The outgoing response object.
  * @param {express.NextFunction} next - The callback function to pass control to the next middleware.
  */
-app.use((err, req, res) => {
-    console.error(err.stack);
-
-    res.status(err.status || 500).json({
-        error: {
-            message: err.message || 'Internal Server Error',
-            status: err.status || 500,
-            time: new Date().toISOString(),
-            path: req.originalUrl
-        }
-    });
-});
+app.use(errorHandlerMiddleware);
 
 /**
  * Creates and starts the HTTP server to listen for incoming requests.
