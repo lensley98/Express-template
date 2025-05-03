@@ -2,7 +2,7 @@ import express from 'express';
 import { validateUsername, validatePassword } from '../../../validators/user.validator.js';
 import { generateToken, verifyToken } from '../../../utilities/token.util.js';
 import { v4 as uuidv4 } from 'uuid';
-import  authenticateJWT  from '../../../core/auth.middleware.js';
+import  authenticateJWT  from '../../../middlewares/auth.middleware.js';
 
 const router = express.Router();
 

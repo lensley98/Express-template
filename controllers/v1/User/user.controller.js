@@ -1,5 +1,6 @@
 import express from 'express';
-import  authenticateJWT from '../../../core/auth.middleware.js';
+import  authenticateJWT from '../../../middlewares/auth.middleware.js';
+import {AppError} from "../../../utilities/appError.util.js";
 
 const router = express.Router();
 
@@ -29,12 +30,38 @@ router.get('/list', authenticateJWT, (req, res) => {
  *     tags: [User]
  *     responses:
  *       200:
- *         description: user info
+ *         description: User info
  */
 // Public route (no auth)
 router.get('/public-info', (req, res) => {
     res.json({ message: 'This is public information' });
 });
+
+/**
+ * @swagger
+ * /user/simulate-error-no-user:
+ *   get:
+ *     summary: Simulate error handling
+ *     tags: [User]
+ *     responses:
+ *       200:
+ *         description: Simulate error handling
+ *       404:
+ *          description: User not found
+ */
+router.get('/simulate-error-no-user', (req, res, next) => {
+    try {
+        const user = null; // simulate no user
+
+        if (!user) {
+            throw new AppError('User not found', 404);
+        }
+
+        res.json({ success: true, data: user });
+    } catch (err) {
+        next(err); // Pass to the centralized error handler
+    }
+})
 
 
 export default router;
