@@ -16,8 +16,8 @@ export default [
     parserOptions: {
       // Add support for new experimental features
       ecmaFeatures: {
-        impliedStrict: true
-      }
+        impliedStrict: true,
+      },
     },
     plugins: {
       prettier: eslintPluginPrettier,

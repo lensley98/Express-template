@@ -16,11 +16,11 @@ export function protectVersionRoutes(version) {
         '/auth/refresh-token',
         '/auth/register',
         '/auth/logout',
-        '/user/public-info'
+        '/user/public-info',
       ]; // public routes in v1
 
       // Check if the current path matches any public route
-      const isPublicRoute = publicRoutes.some(route => req.path.endsWith(route));
+      const isPublicRoute = publicRoutes.some((route) => req.path.endsWith(route));
 
       if (isPublicRoute) {
         return next(); // Skip authentication for public routes

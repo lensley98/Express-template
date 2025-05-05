@@ -47,7 +47,7 @@ app.use(cookieParser());
  * Global CSRF protection for all non-GET routes
  * Skips routes that don't need CSRF protection
  */
-app.use(csrfProtection())
+app.use(csrfProtection());
 
 /**
  * Custom CORS middleware to handle origin properly with credentials
@@ -67,7 +67,6 @@ app.use('/api/v1', protectVersionRoutes('v1')); // Protect routes in /api/v2
  * @param {express.Application} app - The Express app to mount routes to.
  */
 setupDynamicRoutes(app);
-
 
 /**
  * Serves the Swagger UI documentation and enables the "Authorize" feature for JWT.

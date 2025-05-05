@@ -51,7 +51,7 @@ const swaggerOptions = {
           type: 'http', // Type of security scheme
           scheme: 'bearer', // The authentication scheme
           bearerFormat: 'JWT', // The format of the bearer token (JWT)
-        }
+        },
       },
     },
     security: [
