@@ -3,7 +3,8 @@ import { v4 as guid } from 'uuid';
 import { AppError } from '../../../utilities/appError.util.js';
 import logger from '../../../utilities/logger.util.js';
 import {
-  handleValidationErrors, validateEmail,
+  handleValidationErrors,
+  validateEmail,
   validatePassword,
   validateUsername,
 } from '../../../validators/user.validator.js';
@@ -173,35 +174,38 @@ router.get('/public-info', (req, res) => {
  *       403:
  *         description: CSRF validation failed
  */
-router.post('/register',[validateUsername, validatePassword,validateEmail, handleValidationErrors], async (req, res, next) => {
-  try {
+router.post(
+  '/register',
+  [validateUsername, validatePassword, validateEmail, handleValidationErrors],
+  async (req, res, next) => {
+    try {
+      const { username, email, password } = req.body;
 
-    const { username, email, password } = req.body;
+      // TODO: Add validation and actual user creation logic
 
-    // TODO: Add validation and actual user creation logic
+      // For demo purposes
+      const user = {
+        id: guid(),
+        username,
+        email,
+        createdAt: new Date(),
+      };
 
-    // For demo purposes
-    const user = {
-      id: guid(),
-      username,
-      email,
-      createdAt: new Date()
-    };
-
-    return res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      user: {
-        id: user.id,
-        username: user.username,
-        email: user.email
-      }
-    });
-  } catch (error) {
-    logger.error('User registration error:', error);
-    next(error);
+      return res.status(201).json({
+        success: true,
+        message: 'User registered successfully',
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        },
+      });
+    } catch (error) {
+      logger.error('User registration error:', error);
+      next(error);
+    }
   }
-});
+);
 
 /**
  * @swagger

@@ -24,7 +24,7 @@ const authenticateJWT = (req, res, next) => {
     }
 
     // Verify the token
-    req.user = verifyToken(token)
+    req.user = verifyToken(token);
 
     next();
   } catch (err) {
@@ -42,6 +42,6 @@ const authenticateJWT = (req, res, next) => {
       message: 'Invalid or malformed token',
     });
   }
-}
+};
 
 export default authenticateJWT;

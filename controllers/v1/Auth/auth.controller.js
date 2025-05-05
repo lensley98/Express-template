@@ -5,7 +5,8 @@ import {
   handleValidationErrors,
 } from '../../../validators/user.validator.js';
 import {
-  generateCsrfToken, generateRefreshToken,
+  generateCsrfToken,
+  generateRefreshToken,
   generateToken,
   verifyRefreshToken,
 } from '../../../utilities/token.util.js';
@@ -151,7 +152,7 @@ router.post('/refresh-token', (req, res, next) => {
     if (!refreshToken) {
       return res.status(401).json({
         success: false,
-        message: 'No refresh token provided'
+        message: 'No refresh token provided',
       });
     }
 
@@ -162,14 +163,14 @@ router.post('/refresh-token', (req, res, next) => {
     if (!decoded.tokenType || decoded.tokenType !== 'refresh') {
       return res.status(403).json({
         success: false,
-        message: 'Invalid token type'
+        message: 'Invalid token type',
       });
     }
 
     // Create a user object from decoded refresh token
     const user = {
       id: decoded.id,
-      username: decoded.username
+      username: decoded.username,
     };
 
     // Generate new tokens
@@ -189,7 +190,7 @@ router.post('/refresh-token', (req, res, next) => {
     return res.status(200).json({
       success: true,
       accessToken,
-      csrfToken
+      csrfToken,
     });
   } catch (error) {
     logger.error('Token refresh error:', error);
@@ -197,7 +198,7 @@ router.post('/refresh-token', (req, res, next) => {
     if (error.name === 'TokenExpiredError') {
       return res.status(401).json({
         success: false,
-        message: 'Refresh token expired, please login again'
+        message: 'Refresh token expired, please login again',
       });
     }
 
@@ -241,7 +242,7 @@ router.post('/logout', (req, res) => {
 
   return res.status(200).json({
     success: true,
-    message: 'Logged out successfully.'
+    message: 'Logged out successfully.',
   });
 });
 

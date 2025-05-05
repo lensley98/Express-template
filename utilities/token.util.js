@@ -35,7 +35,7 @@ const generateRefreshToken = (user) => {
   return jwt.sign(
     {
       id: user.id,
-      type: 'refresh'
+      type: 'refresh',
     },
     process.env.REFRESH_TOKEN_SECRET,
     { expiresIn: '7d' }
@@ -48,7 +48,7 @@ const generateRefreshToken = (user) => {
  * @returns {Object} Decoded token payload
  */
 const verifyRefreshToken = (token) => {
-  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET );
+  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
 };
 
 /**
@@ -69,7 +69,7 @@ const validateCsrfToken = (req, res, next) => {
   if (!csrfToken || !storedCsrfToken || csrfToken !== storedCsrfToken) {
     return res.status(403).json({
       success: false,
-      message: 'CSRF token validation failed'
+      message: 'CSRF token validation failed',
     });
   }
 
@@ -84,4 +84,11 @@ const generateCsrfToken = () => {
   return crypto.randomBytes(32).toString('hex');
 };
 
-export { generateToken, verifyToken, generateRefreshToken, verifyRefreshToken, validateCsrfToken, generateCsrfToken};
+export {
+  generateToken,
+  verifyToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+  validateCsrfToken,
+  generateCsrfToken,
+};

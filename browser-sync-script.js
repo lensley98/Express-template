@@ -40,7 +40,13 @@ browserSync.init({
    * Files to watch for changes. Trigger a browser reload on changes.
    * @type {string[]}
    */
-  files: ['controllers/**/*.js', 'config/swagger.config.js', 'config/cors.config.json' , 'validators/**/*.js', 'middlewares/**/*.js'],
+  files: [
+    'controllers/**/*.js',
+    'config/swagger.config.js',
+    'config/cors.config.json',
+    'validators/**/*.js',
+    'middlewares/**/*.js',
+  ],
 
   /**
    * Automatically open the browser when BrowserSync starts.
