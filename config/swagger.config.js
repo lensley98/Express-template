@@ -15,6 +15,9 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * @property {string} definition.components.securitySchemes.BearerAuth.type - The type of security scheme (Bearer).
  * @property {string} definition.components.securitySchemes.BearerAuth.scheme - The scheme for the security (HTTP Bearer).
  * @property {string} definition.components.securitySchemes.BearerAuth.bearerFormat - The bearer format (JWT).
+ * @property {string} definition.components.securitySchemes.cookieAuth.type - The type of security scheme (Bearer).
+ * @property {string} definition.components.securitySchemes.cookieAuth.in - The path of the cookie.
+ * @property {string} definition.components.securitySchemes.cookieAuth.name - The name of the cookie.
  * @property {Object[]} definition.security - Global security settings applied to all routes.
  * @property {Object} apis - Path to API files where documentation is extracted from.
  */
@@ -25,39 +28,46 @@ import swaggerJsdoc from 'swagger-jsdoc';
  * @type {SwaggerOptions}
  */
 const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0', // OpenAPI version
-        info: {
-            title: 'Template API',    // API title
-            version: '1.0.0',         // API version
-            description: 'API documentation automatically generated.', // Description of the API
-        },
-        servers: [
-            {
-                url: `http://localhost:${process.env.PORT || 3000}/api/v1`, // v1 server URL
-                description: 'Development server (v1)', // Description for v1
-            },
-            {
-                url: `http://localhost:${process.env.PORT || 3000}/api/v2`, // v2 server URL
-                description: 'Development server (v2)', // Description for v2
-            },
-        ],
-        components: {
-            securitySchemes: {
-                BearerAuth: {
-                    type: 'http',  // Type of security scheme
-                    scheme: 'bearer', // The authentication scheme
-                    bearerFormat: 'JWT', // The format of the bearer token (JWT)
-                },
-            },
-        },
-        security: [
-            {
-                BearerAuth: [],  // Apply BearerAuth security globally to all routes
-            },
-        ],
+  definition: {
+    openapi: '3.0.0', // OpenAPI version
+    info: {
+      title: 'Template API', // API title
+      version: '1.0.0', // API version
+      description: 'API documentation automatically generated.', // Description of the API
     },
-    apis: ['./controllers/**/*.controller.js'], // Files to scan for API definitions
+    servers: [
+      {
+        url: `http://localhost:${process.env.PORT || 3000}/api/v1`, // v1 server URL
+        description: 'Development server (v1)', // Description for v1
+      },
+      {
+        url: `http://localhost:${process.env.PORT || 3000}/api/v2`, // v2 server URL
+        description: 'Development server (v2)', // Description for v2
+      },
+    ],
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http', // Type of security scheme
+          scheme: 'bearer', // The authentication scheme
+          bearerFormat: 'JWT', // The format of the bearer token (JWT)
+        }
+      },
+    },
+    security: [
+      {
+        BearerAuth: [], // Apply BearerAuth security globally to all routes
+      },
+      {
+        cookieAuth: [],
+      },
+    ],
+  },
+  apis: [
+    './controllers/**/*.controller.js',
+    './validators/**/*.js', // Include validators in Swagger scanning
+    './middlewares/**/*.js', // Include middlewares in Swagger scanning
+  ], // Files to scan for API definitions
 };
 
 /**

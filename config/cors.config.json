@@ -1,0 +1,25 @@
+{
+  "allowedOrigins": [
+    "http://localhost:4004",
+    "http://localhost:3000",
+    "http://localhost:4003"
+  ],
+  "allowedHeaders": [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+    "x-csrf-token"
+  ],
+  "allowedMethods": [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS"
+  ],
+  "exposedHeaders": ["Set-Cookie", "Authorization"],
+  "credentials": true
+}

@@ -4,10 +4,13 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "lint": "eslint . --ext .js",
+    "format": "prettier --write .",
     "start": "node --env-file=.env app.js",
     "dev": "nodemon --env-file=.env app.js",
     "browser-sync": "node --env-file=.env browser-sync-script.js",
-    "dev:sync": "concurrently \"nodemon --env-file=.env app.js\" \"wait-on tcp:4003 && npm run browser-sync\""
+    "dev:sync": "concurrently \"nodemon --env-file=.env app.js\" \"wait-on tcp:4003 && npm run browser-sync\"",
+    "dev:log": "concurrently \"nodemon --env-file=.env --quiet app.js\" \"wait-on tcp:4003 && node --env-file=.env browser-sync-script.js\""
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
@@ -15,19 +18,27 @@
     "babel-loader": "^10.0.0",
     "chokidar": "^4.0.3",
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "^4.21.2",
+    "express-validator": "^7.2.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
+    "on-finished": "^2.4.1",
     "swagger-autogen": "^2.23.7",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "browser-sync": "^3.0.4",
     "concurrently": "^8.2.2",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "prettier": "^3.5.3",
     "wait-on": "^7.2.0"
   }
 }

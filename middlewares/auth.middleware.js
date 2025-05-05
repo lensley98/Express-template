@@ -1,37 +1,47 @@
-import jwt from 'jsonwebtoken';
-import express from 'express';
-const { RequestHandler } = express;
-
-const secretKey = process.env.SECRET_KEY;
+import { verifyToken } from '../utilities/token.util.js';
+import logger from '../utilities/logger.util.js';
 
 /**
  * Middleware to protect routes using JWT authentication.
- *
- * @type {RequestHandler}
+ * Now prioritizes Authorization header over cookies for the main token.
+ * @param {import('express').Request} req - The Express request object.
+ * @param {import('express').Response} res - The Express response object.
+ * @param {import('express').NextFunction} next - The next middleware function in the chain.
  */
 const authenticateJWT = (req, res, next) => {
-    const authHeader = req.headers.authorization || req.cookies.authToken; // Allow token from Cookie too!
-
-    if (!authHeader) {
-        return res.status(401).json({ error: 'Unauthorized: No token provided' });
-    }
-
+  try {
     let token;
+    const authHeader = req.headers.authorization;
 
-    if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
-        token = authHeader.split(' ')[1];
+    // Prioritize Authorization header (Bearer token)
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
     } else {
-        token = authHeader;
+      return res.status(401).json({
+        success: false,
+        message: 'Authentication required. No token provided.',
+      });
     }
 
-    jwt.verify(token, secretKey, (err, decoded) => {
-        if (err) {
-            console.error('JWT Error:', err);
-            return res.status(403).json({ error: 'Forbidden: Invalid or expired token' });
-        }
-        req.user = decoded; // Attach user info to request
-        next();
+    // Verify the token
+    req.user = verifyToken(token)
+
+    next();
+  } catch (err) {
+    logger.error('JWT Authentication Error:', err);
+
+    if (err.name === 'TokenExpiredError') {
+      return res.status(401).json({
+        success: false,
+        message: 'Token expired. Please login again.',
+      });
+    }
+
+    return res.status(403).json({
+      success: false,
+      message: 'Invalid or malformed token',
     });
-};
+  }
+}
 
 export default authenticateJWT;

@@ -1,22 +1,23 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import logger from 'morgan';
 import http from 'http';
 import helmet from 'helmet';
-import setupHelmet from './config/helmet.js';
+import setupHelmet from './config/helmet.config.js';
 import { setupDynamicRoutes } from './core/routesLoader.js';
 import { protectVersionRoutes } from './middlewares/version.middleware.js';
-import {errorHandlerMiddleware} from "./middlewares/errorHandler.middleware.js";
+import { errorHandlerMiddleware } from './middlewares/errorHandler.middleware.js';
 import swaggerUi from 'swagger-ui-express';
-import swaggerSpec from './config/swagger.js';
+import swaggerSpec from './config/swagger.config.js';
+import logger, { morganMiddleware } from './utilities/logger.util.js';
+import { csrfProtection } from './middlewares/csrf.middleware.js';
+import { corsPolicy } from './middlewares/cors.middleware.js';
 
 const app = express();
 if (process.env.NODE_ENV === 'production') {
-    setupHelmet(app);
+  setupHelmet(app);
 } else {
-    app.use(helmet({ contentSecurityPolicy: false }));
+  app.use(helmet({ contentSecurityPolicy: false }));
 }
-
 
 /**
  * Middleware to parse JSON bodies.
@@ -30,13 +31,11 @@ app.use(express.json());
  */
 app.use(express.urlencoded({ extended: false }));
 
-
-
 /**
  * Middleware to log HTTP requests.
  * @function
  */
-app.use(logger('dev'));
+app.use(morganMiddleware);
 
 /**
  * Middleware to parse cookies.
@@ -45,32 +44,22 @@ app.use(logger('dev'));
 app.use(cookieParser());
 
 /**
- * CORS middleware to allow cross-origin requests with proper headers for Swagger UI and API requests.
- * @function
- * @param {express.Request} req - The incoming request object.
- * @param {express.Response} res - The outgoing response object.
- * @param {express.NextFunction} next - The callback function to pass control to the next middleware.
+ * Global CSRF protection for all non-GET routes
+ * Skips routes that don't need CSRF protection
  */
-app.use((req, res, next) => {
-    const origin = req.headers.origin;
-    res.header('Access-Control-Allow-Origin', origin);
+app.use(csrfProtection())
 
-    // Allow credentials (important for cookie-based auth)
-    res.header('Access-Control-Allow-Credentials', 'true');
+/**
+ * Custom CORS middleware to handle origin properly with credentials
+ */
+app.use(corsPolicy());
 
-    // Allow necessary headers (especially for Swagger UI)
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-
-    // Allow common methods
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-
-    // Handle preflight OPTIONS requests
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
-    next();
-});
+/**
+ * Protects routes for version 2 using JWT authentication.
+ * @function
+ * @param {string} version - The version string to apply protection to (e.g., 'v2').
+ */
+app.use('/api/v1', protectVersionRoutes('v1')); // Protect routes in /api/v2
 
 /**
  * Sets up dynamic versioned routes and watches for changes in controller files.
@@ -79,34 +68,23 @@ app.use((req, res, next) => {
  */
 setupDynamicRoutes(app);
 
-/**
- * Protects routes for version 2 using JWT authentication.
- * @function
- * @param {string} version - The version string to apply protection to (e.g., 'v2').
- */
-app.use('/api/v2', protectVersionRoutes('v2'));  // Protect routes in /api/v2
 
 /**
  * Serves the Swagger UI documentation and enables the "Authorize" feature for JWT.
  * @function
  * @param {swaggerUi.SwaggerUiOptions} swaggerSpec - The Swagger specification.
  */
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    explorer: true,
     swaggerOptions: {
-        authAction: {
-            BearerAuth: {
-                name: 'BearerAuth',
-                schema: {
-                    type: 'apiKey',
-                    in: 'header',
-                    name: 'Authorization',
-                    description: `Enter your JWT token as "Bearer <your_token>"`,
-                },
-                value: 'Bearer <your_token_here>', // Placeholder for the token
-            },
-        },
-    }
-}));
+      withCredentials: true, // Enable sending cookies with Swagger requests
+      persistAuthorization: true,
+    },
+  })
+);
 
 /**
  * Global error handler middleware for catching and logging errors.
@@ -132,11 +110,11 @@ const PORT = process.env.PORT || 3000;
 const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
 
 server.listen(PORT, () => {
-    const appUrl = `${protocol}://${process.env.URL || 'localhost'}:${PORT}`;
-    console.clear(); // optional: clears console each restart for clean logs
+  const appUrl = `${protocol}://${process.env.URL || 'localhost'}:${PORT}`;
+  console.clear(); // optional: clears console each restart for clean logs
 
-    console.table([
-        { Name: "🚀 Server running at", URL: appUrl },
-        { Name: "📚 API Docs available at", URL: `${appUrl}/api-docs` }
-    ]);
+  console.table([
+    { Name: '🚀 Server running at', URL: appUrl },
+    { Name: '📚 API Docs available at', URL: `${appUrl}/api-docs` },
+  ]);
 });

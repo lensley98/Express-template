@@ -101,6 +101,7 @@ out
 .DS_Store
 
 # JetBrains IDEs (WebStorm, IntelliJ, etc.)
+.idea/
 .idea/*.xml
 
 # bin
