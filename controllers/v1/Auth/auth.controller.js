@@ -2,6 +2,7 @@ import express from 'express';
 import {
   validateUsername,
   validatePassword,
+  validateEmail,
   handleValidationErrors,
 } from '../../../validators/user.validator.js';
 import {
@@ -14,6 +15,70 @@ import { v4 as guid } from 'uuid';
 import logger from '../../../utilities/logger.util.js';
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Authentication]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - username
+ *               - email
+ *               - password
+ *             properties:
+ *               username:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Invalid input data
+ *       403:
+ *         description: CSRF validation failed
+ */
+router.post(
+  '/register',
+  [validateUsername, validatePassword, validateEmail, handleValidationErrors],
+  async (req, res, next) => {
+    try {
+      const { username, email, password } = req.body;
+
+      // TODO: Add validation and actual user creation logic
+
+      // For demo purposes
+      const user = {
+        id: guid(),
+        username,
+        email,
+        createdAt: new Date(),
+      };
+
+      return res.status(201).json({
+        success: true,
+        message: 'User registered successfully',
+        user: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+        },
+      });
+    } catch (error) {
+      logger.error('User registration error:', error);
+      next(error);
+    }
+  }
+);
 
 /**
  * @swagger
@@ -160,7 +225,7 @@ router.post('/refresh-token', (req, res, next) => {
     const decoded = verifyRefreshToken(refreshToken);
 
     // Check if it's actually a refresh token
-    if (!decoded.tokenType || decoded.tokenType !== 'refresh') {
+    if (!decoded.type || decoded.type !== 'refresh') {
       return res.status(403).json({
         success: false,
         message: 'Invalid token type',
