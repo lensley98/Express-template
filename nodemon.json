@@ -1,0 +1,6 @@
+{
+  "watch": ["src"],
+  "ext": "ts,json",
+  "ignore": ["src/**/*.spec.ts"],
+  "exec": "tsx --tsconfig tsconfig.json --experimental-specifier-resolution=node src/app.ts"
+}
