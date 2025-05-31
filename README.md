@@ -1,34 +1,63 @@
-# API Template
+# 🚀 API Template
 
-This is an Express-based API template. It includes:
+![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen)
+![Node](https://img.shields.io/badge/Node-%3E%3D20.0.0%20%7C%7C%20%3E%3D22.0.0-blue)
+![npm](https://img.shields.io/badge/npm-%3E%3D9.0.0-red)
+![TypeScript](https://img.shields.io/badge/TypeScript-Supported-3178c6?logo=typescript)
 
-- JWT authentication
-- X-CSRF-Token protection
-- Swagger documentation
-- Route versioning
-- Validation with custom utility functions
-- Logging
-- ESLint & Prettier
-- Global error handling
+A powerful Express-based API template packed with essential features for secure and scalable backend development.
 
-## Getting Started
+---
 
-### 1. Clone the repository:
+## 📚 Table of Contents
+
+- [✨ Features](#-features)
+- [🚀 Getting Started](#-getting-started)
+  - [📥 Clone the Repository](#-1-clone-the-repository)
+  - [📦 Install Dependencies](#-2-install-dependencies)
+  - [🔐 Set Up Environment Variables](#-3-set-up-environment-variables)
+  - [▶️ Start the Application](#-4-start-the-application-with-swagger)
+- [🌐 API Endpoints Overview](#-5-api-endpoints-overview)
+- [🔒 Authentication Requirements](#-6-authentication-requirements)
+- [🛠️ Customizing the Template](#-7-customizing-the-template)
+- [⚙️ Scaffold Script](#-8-scaffold-script-or-generators)
+
+
+---
+
+## ✨ Features
+
+This Express-based template includes:
+
+- 🔐 **JWT authentication**  
+- 🛡️ **X-CSRF-Token protection**  
+- 📘 **Swagger documentation**  
+- 🗂️ **Route versioning**  
+- ✅ **Validation with custom utility functions**  
+- 📝 **Logging**  
+- 🧹 **ESLint & Prettier**  
+- 💥 **Global error handling**
+
+---
+
+## 🚀 Getting Started
+
+### 📥 1. Clone the repository
 
 ```bash
 git clone https://github.com/lensley98/Express-template.git
 cd Express-template
-```
+````
 
-### 2. Install dependencies:
+### 📦 2. Install dependencies
 
 ```bash
-   npm install
+npm install
 ```
 
-### 3. Set up environment variables:
+### 🔐 3. Set up environment variables
 
-Create a .env file and set up the following variables:
+Create a `.env` file and set the following variables:
 
 ```ini
 PORT=4003
@@ -44,48 +73,62 @@ URL=localhost
 LOG_LEVEL=info
 ```
 
-### 4. Start the application with swagger:
+### ▶️ 4. Start the application with Swagger
 
 ```bash
- npm dev:sync
+npm run dev:sync
 ```
 
-Once the app is running, you can access the Swagger API documentation at:
+Once the app is running, open Swagger API docs at:
 
-```bash
+```
 http://localhost:4003/api-docs
 ```
 
-### 5. API Endpoints Overview
+---
 
-Below is a summary of the main API endpoints. For detailed documentation including request/response schemas, authentication requirements, and examples, please refer to the Swagger documentation.
+## 🌐 5. API Endpoints Overview
 
-#### Authentication
+This is a summary of the core endpoints. Full docs (schemas, responses, auth) available at Swagger UI.
 
-- `POST /api/v1/auth/register` - Register a new user
-- `POST /api/v1/auth/login` - Authenticate and receive JWT token
-- `POST /api/v1/auth/refresh-token` - Get a new access token using refresh token
-- `POST /api/v1/auth/logout` - Invalidate current tokens
+### 🔐 Authentication
 
-#### Users
+| Method | Endpoint                     | Description                       |
+|--------|------------------------------|-----------------------------------|
+| POST   | `/api/v1/auth/register`      | Register a new user               |
+| POST   | `/api/v1/auth/login`         | Login and receive JWT             |
+| POST   | `/api/v1/auth/refresh-token` | Get a new token via refresh token |
+| POST   | `/api/v1/auth/logout`        | Invalidate current tokens         |
 
-- `GET /api/v1/users` - Get all users (admin only)
-- `GET /api/v1/users/:id` - Get user by ID
-- `PUT /api/v1/users/:id` - Update user information
-- `DELETE /api/v1/users/:id` - Delete a user
+### 👤 Users
 
-_Note: All endpoints except authentication endpoints require both JWT and X-CSRF-Token headers for protection._
+| Method | Endpoint            | Description           |
+|--------|---------------------|-----------------------|
+| GET    | `/api/v1/users`     | Get all users (admin) |
+| GET    | `/api/v1/users/:id` | Get user by ID        |
+| PUT    | `/api/v1/users/:id` | Update user info      |
+| DELETE | `/api/v1/users/:id` | Delete user           |
 
-### 6. Authentication Requirements
+> ⚠️ All endpoints (except auth) require JWT and X-CSRF-Token headers.
 
-All authenticated endpoints require the following headers:
+---
 
-- **Authorization** - Bearer token format: `Bearer {jwt_token}`
-- **X-CSRF-Token** - CSRF protection token that must be included in all requests that modify data
+## 🔒 6. Authentication Requirements
 
-The CSRF tokens are securely generated using `crypto.randomBytes(32).toString('hex')` and don't require any environment variables.
+All authenticated endpoints require these headers:
 
-Example request:
+* `Authorization: Bearer <jwt_token>`
+* `X-CSRF-Token: <csrf_token>`
+
+CSRF tokens are securely generated using:
+
+```js
+crypto.randomBytes(32).toString('hex')
+```
+
+No need to define them in `.env`.
+
+### ✅ Example Authenticated Request
 
 ```javascript
 fetch('/api/v1/resource', {
@@ -99,27 +142,39 @@ fetch('/api/v1/resource', {
 });
 ```
 
-### 7. Customizing the Template:
+---
 
-- Controllers: Add new controllers to the controllers/ directory.
+## 🛠️ 7. Customizing the Template
 
-- Validators: Create new validation schemas in validators/.
+Here’s how to extend and customize your API:
 
-- Utilities: Add utility functions in the utilities/ directory.
+* **Controllers**
+  Add new files under `controllers/`.
 
-- Swagger: Update the swagger.config.ts file to document your new endpoints.
+* **Validators**
+  Add schemas under `validators/`.
 
-- Middlewares: Add your middleware to the middleware/ directory.
+* **Utilities**
+  Add helper functions in `utilities/`.
 
-- Cors: Modify the cors.config.json file for your project requirements.
+* **Swagger**
+  Update endpoint docs in `swagger.config.ts`.
 
-### 8. **Scaffold Script or Generators**
+* **Middlewares**
+  Add global or route-level middleware in `middleware/`.
 
-You can create a `scaffold.js` script or use an external tool (like Yeoman) to automate project creation based on this template. However, for simplicity, you can create a manual scaffold method using `npx`.
+* **CORS Configuration**
+  Modify the `cors.config.json` to match project policies.
 
-#### Example Scaffold Script (`scaffold.js`):
+---
 
-```javascript
+## ⚙️ 8. Scaffold Script or Generators
+
+You can use a simple script or generator like `Yeoman` to automate project creation based on this template.
+
+### 📄 Example `scaffold.js` Script
+
+```js
 const fs = require('fs');
 const path = require('path');
 
@@ -142,5 +197,11 @@ const copyDirRecursive = (src, dest) => {
 
 fs.mkdirSync(targetDir, { recursive: true });
 copyDirRecursive(sourceDir, targetDir);
-console.log(`New project created at ${targetDir}`);
+console.log(`📁 New project created at ${targetDir}`);
 ```
+
+---
+
+> ✅ Built for developers who want structure, security, and flexibility in their Express APIs.
+
+Happy building! 🚀
